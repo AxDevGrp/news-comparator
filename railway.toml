@@ -1,4 +1,0 @@
-[deploy]
-startCommand = "node .next/standalone/server.js"
-restartPolicyType = "on_failure"
-restartPolicyMaxRetries = 3
