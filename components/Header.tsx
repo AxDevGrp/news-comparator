@@ -19,6 +19,9 @@ export function Header() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
+            <Link href="/feed" className="text-sm font-medium text-neutral-900 transition">
+              Live Feed
+            </Link>
             <Link href="/" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition">
               Daily Pulse
             </Link>
@@ -27,9 +30,6 @@ export function Header() {
             </Link>
             <Link href="/war-room" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition">
               War Room
-            </Link>
-            <Link href="#about" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition">
-              About
             </Link>
           </nav>
 
@@ -46,6 +46,9 @@ export function Header() {
       {open && (
         <div className="md:hidden border-t border-neutral-200 bg-white">
           <div className="px-4 py-3 space-y-2">
+            <Link href="/feed" className="block text-sm font-medium text-neutral-900" onClick={() => setOpen(false)}>
+              Live Feed
+            </Link>
             <Link href="/" className="block text-sm font-medium text-neutral-600" onClick={() => setOpen(false)}>
               Daily Pulse
             </Link>
@@ -54,9 +57,6 @@ export function Header() {
             </Link>
             <Link href="/war-room" className="block text-sm font-medium text-neutral-600" onClick={() => setOpen(false)}>
               War Room
-            </Link>
-            <Link href="#about" className="block text-sm font-medium text-neutral-600" onClick={() => setOpen(false)}>
-              About
             </Link>
           </div>
         </div>
