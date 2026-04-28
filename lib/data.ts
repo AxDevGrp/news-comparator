@@ -279,3 +279,101 @@ export function getTopicBySlug(slug: string): WarRoomTopic | undefined {
   if (slug === 'iran-war') return iranWarTopic
   return undefined
 }
+
+// ─────────────────────────────────────────────────────────────
+// X TOP STORIES — Trending discourse decomposed
+// ─────────────────────────────────────────────────────────────
+
+export interface XTopStory {
+  id: string
+  rank: number
+  trendingTopic: string
+  slug: string
+  viralClaim: string
+  leftFraming: string
+  rightFraming: string
+  mediaLag: string
+  earlyFacts: string
+  blindspot: string
+  engagementEstimate: string
+  lastUpdated: string
+  isBreaking?: boolean
+}
+
+export const xTopStories: XTopStory[] = [
+  {
+    id: 'x1',
+    rank: 1,
+    trendingTopic: 'JD Vance stormed out of Iran briefing',
+    slug: 'vance-iran-briefing',
+    viralClaim: 'Video shows JD Vance leaving an Iran briefing in anger after clashing with generals.',
+    leftFraming: 'Proof the Trump administration is in disarray; even the VP cannot stomach the war plan.',
+    rightFraming: 'Vance stood firm against reckless escalation — exactly why Americans elected this ticket.',
+    mediaLag: 'Fox has not covered the clip. Politico published a brief but did not embed the video.',
+    earlyFacts: 'The video is 12 seconds, decontextualized. White House says Vance left for a scheduled meeting.',
+    blindspot: 'No outlet has verified the timestamp or the meeting schedule Vance was supposedly heading to.',
+    engagementEstimate: '~2.3M impressions on X',
+    lastUpdated: '2026-04-28T13:00:00Z',
+    isBreaking: true,
+  },
+  {
+    id: 'x2',
+    rank: 2,
+    trendingTopic: 'Oil hits $112 after Hormuz rumours',
+    slug: 'oil-hormuz-rumours',
+    viralClaim: 'A tanker was "disabled" in the Strait of Hormuz, triggering the oil spike.',
+    leftFraming: 'Trump\'s brinkmanship is already hitting working families at the petrol pump.',
+    rightFraming: 'This is why energy independence matters — Biden-era weakness enabled Iranian aggression.',
+    mediaLag: 'Reuters confirmed no tanker incident. Bloomberg reported the rumour without the retraction.',
+    earlyFacts: 'Reuters: no incident reported. Price spike driven by futures speculation, not supply disruption.',
+    blindspot: 'The original rumour account has 400 followers and no verification. It was quoted by major outlets.',
+    engagementEstimate: '~1.8M impressions on X',
+    lastUpdated: '2026-04-28T12:45:00Z',
+    isBreaking: false,
+  },
+  {
+    id: 'x3',
+    rank: 3,
+    trendingTopic: 'Bernie Sanders clip goes viral in Israel',
+    slug: 'bernie-israel-viral',
+    viralClaim: 'Bernie Sanders\' floor speech on stopping Israel arms aid is trending #1 in Tel Aviv.',
+    leftFraming: 'Even Israelis recognise Sanders is speaking truth to power — American hawks are isolated.',
+    rightFraming: 'Tel Aviv leftists do not speak for Israel. Hamas supporters signal-boosting an anti-Israel politician.',
+    mediaLag: 'Haaretz reported the clip but noted it was shared by a fringe account, not mainstream Israeli discourse.',
+    earlyFacts: 'The clip was shared by a single account with 12K followers. Not verified as trending in Israel.',
+    blindspot: 'No outlet checked X\'s trending algorithm for Tel Aviv — the claim is unverified but widely repeated.',
+    engagementEstimate: '~940K impressions on X',
+    lastUpdated: '2026-04-28T12:30:00Z',
+    isBreaking: false,
+  },
+  {
+    id: 'x4',
+    rank: 4,
+    trendingTopic: 'Iranian "martyrdom" London embassy story',
+    slug: 'iran-embassy-martyrs',
+    viralClaim: 'The Iranian Embassy in London is openly recruiting suicide bombers / martyrs.',
+    leftFraming: 'Tabloid hysteria. Diplomatic cultural events are being misrepresented as terror recruitment.',
+    rightFraming: 'This is not hyperbole — the Iranian regime has a documented history of using embassies for operations.',
+    mediaLag: 'Evening Standard broke the story. BBC has not covered it. Guardian published a critical fact-check.',
+    earlyFacts: 'The event was a cultural commemoration. The word "martyr" was used in a religious context.',
+    blindspot: 'No outlet has published the original invitation or programme to let readers judge for themselves.',
+    engagementEstimate: '~720K impressions on X',
+    lastUpdated: '2026-04-28T11:15:00Z',
+    isBreaking: false,
+  },
+  {
+    id: 'x5',
+    rank: 5,
+    trendingTopic: 'European leaders "bypassing" US on Iran',
+    slug: 'europe-bypass-us',
+    viralClaim: 'Macron and Starmer are negotiating a separate Iran deal without Trump\'s involvement.',
+    leftFraming: 'America\'s allies are losing faith in Trump\'s chaotic diplomacy and forging their own path.',
+    rightFraming: 'European elites have always been weak on Iran — they\'re undermining US-led pressure for their own gain.',
+    mediaLag: 'BBC reported the meeting but did not characterise it as "bypassing." No US outlet has used that framing.',
+    earlyFacts: 'Macron and Starmer held a bilateral. Joint statement called for "coordinated diplomacy" with the US.',
+    blindspot: 'The word "bypassing" appears only on X and in one substack post. It is not in any official communication.',
+    engagementEstimate: '~560K impressions on X',
+    lastUpdated: '2026-04-28T10:50:00Z',
+    isBreaking: false,
+  },
+]

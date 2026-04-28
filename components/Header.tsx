@@ -22,7 +22,10 @@ export function Header() {
             <Link href="/" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition">
               Daily Pulse
             </Link>
-            <Link href="/war-room/iran-war" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition">
+            <Link href="/x-top-stories" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition">
+              X Top Stories
+            </Link>
+            <Link href="/war-room" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition">
               War Room
             </Link>
             <Link href="#about" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition">
@@ -46,7 +49,10 @@ export function Header() {
             <Link href="/" className="block text-sm font-medium text-neutral-600" onClick={() => setOpen(false)}>
               Daily Pulse
             </Link>
-            <Link href="/war-room/iran-war" className="block text-sm font-medium text-neutral-600" onClick={() => setOpen(false)}>
+            <Link href="/x-top-stories" className="block text-sm font-medium text-neutral-600" onClick={() => setOpen(false)}>
+              X Top Stories
+            </Link>
+            <Link href="/war-room" className="block text-sm font-medium text-neutral-600" onClick={() => setOpen(false)}>
               War Room
             </Link>
             <Link href="#about" className="block text-sm font-medium text-neutral-600" onClick={() => setOpen(false)}>
