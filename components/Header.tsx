@@ -28,8 +28,8 @@ export function Header() {
             <Link href="/x-top-stories" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition">
               X Top Stories
             </Link>
-            <Link href="/war-room" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition">
-              War Room
+            <Link href="/topics" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition">
+              Topics
             </Link>
           </nav>
 
@@ -55,8 +55,8 @@ export function Header() {
             <Link href="/x-top-stories" className="block text-sm font-medium text-neutral-600" onClick={() => setOpen(false)}>
               X Top Stories
             </Link>
-            <Link href="/war-room" className="block text-sm font-medium text-neutral-600" onClick={() => setOpen(false)}>
-              War Room
+            <Link href="/topics" className="block text-sm font-medium text-neutral-600" onClick={() => setOpen(false)}>
+              Topics
             </Link>
           </div>
         </div>

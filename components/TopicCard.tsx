@@ -19,10 +19,10 @@ export function TopicCard({ item }: { item: DailyPulseItem }) {
           )}
         </div>
         <Link
-          href={`/war-room/${item.slug}`}
+          href={`/topics/${item.slug}`}
           className="text-sm font-medium text-neutral-500 hover:text-neutral-900 flex items-center gap-1 transition"
         >
-          War Room <ArrowRight className="w-4 h-4" />
+          Topic <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
 

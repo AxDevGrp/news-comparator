@@ -18,7 +18,7 @@ Open [http://localhost:3000](http://localhost:3000)
 |-----------|---------|
 | `app/` | Next.js App Router pages |
 | `app/api/feeds/` | JSON API for feed data |
-| `app/war-room/[topic]/` | War Room topic pages |
+| `app/topics/[topic]/` | Topic detail pages |
 | `components/` | React components |
 | `lib/data.ts` | Mock data layer (replace with real feed pipeline) |
 
