@@ -133,16 +133,16 @@ function CompactXStory({ story }: { story: (typeof xTopStories)[0] }) {
         )}
       </div>
 
-      <p className="text-xs text-neutral-500 mb-2 line-clamp-2">{story.viralClaim}</p>
+      <p className="text-xs text-neutral-500 mb-3">{story.viralClaim}</p>
 
-      <div className="grid grid-cols-2 gap-2 text-xs">
-        <div>
-          <span className="font-semibold text-blue-700">Left:</span>{' '}
-          <span className="text-neutral-600 line-clamp-2">{story.leftFraming}</span>
+      <div className="space-y-2 text-xs">
+        <div className="flex gap-1.5">
+          <span className="font-semibold text-blue-700 flex-shrink-0 w-10">Left:</span>
+          <span className="text-neutral-600">{story.leftFraming}</span>
         </div>
-        <div>
-          <span className="font-semibold text-red-700">Right:</span>{' '}
-          <span className="text-neutral-600 line-clamp-2">{story.rightFraming}</span>
+        <div className="flex gap-1.5">
+          <span className="font-semibold text-red-700 flex-shrink-0 w-10">Right:</span>
+          <span className="text-neutral-600">{story.rightFraming}</span>
         </div>
       </div>
 
