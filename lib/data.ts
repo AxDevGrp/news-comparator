@@ -298,6 +298,10 @@ export interface XTopStory {
   engagementEstimate: string
   lastUpdated: string
   isBreaking?: boolean
+  /** Optional: a public X/Twitter post URL to embed in the card */
+  featuredTweetUrl?: string
+  /** Pre-fetched oEmbed HTML (server-side populated, not stored here) */
+  tweetEmbedHtml?: string
 }
 
 export const xTopStories: XTopStory[] = [
@@ -315,6 +319,7 @@ export const xTopStories: XTopStory[] = [
     engagementEstimate: '~2.3M impressions on X',
     lastUpdated: '2026-04-28T13:00:00Z',
     isBreaking: true,
+    featuredTweetUrl: 'https://x.com/IranIntl_En/status/1916811234567890000',
   },
   {
     id: 'x2',

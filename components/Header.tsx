@@ -25,6 +25,12 @@ export function Header() {
             <Link href="/topics" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition">
               Topics
             </Link>
+            <Link href="/x-top-stories" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition">
+              X Top Stories
+            </Link>
+            <Link href="/trends" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition">
+              Trends
+            </Link>
           </nav>
 
           <button
@@ -45,6 +51,12 @@ export function Header() {
             </Link>
             <Link href="/topics" className="block text-sm font-medium text-neutral-600" onClick={() => setOpen(false)}>
               Topics
+            </Link>
+            <Link href="/x-top-stories" className="block text-sm font-medium text-neutral-600" onClick={() => setOpen(false)}>
+              X Top Stories
+            </Link>
+            <Link href="/trends" className="block text-sm font-medium text-neutral-600" onClick={() => setOpen(false)}>
+              Trends
             </Link>
           </div>
         </div>

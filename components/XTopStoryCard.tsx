@@ -1,5 +1,6 @@
 import { XTopStory } from '@/lib/data'
 import { Flame, Zap, Clock, AlertTriangle, Eye, Radio } from 'lucide-react'
+import { TweetEmbed } from '@/components/TweetEmbed'
 
 export function XTopStoryCard({ story }: { story: XTopStory }) {
   return (
@@ -43,6 +44,9 @@ export function XTopStoryCard({ story }: { story: XTopStory }) {
           Viral claim
         </p>
         <p className="text-neutral-800 font-medium">{story.viralClaim}</p>
+        {story.featuredTweetUrl && (
+          <TweetEmbed tweetUrl={story.featuredTweetUrl} />
+        )}
       </div>
 
       <div className="grid sm:grid-cols-2 gap-4 mb-4">
