@@ -22,12 +22,6 @@ export function Header() {
             <Link href="/feed" className="text-sm font-medium text-neutral-900 transition">
               Live Feed
             </Link>
-            <Link href="/" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition">
-              Daily Pulse
-            </Link>
-            <Link href="/x-top-stories" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition">
-              X Top Stories
-            </Link>
             <Link href="/topics" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition">
               Topics
             </Link>
@@ -48,12 +42,6 @@ export function Header() {
           <div className="px-4 py-3 space-y-2">
             <Link href="/feed" className="block text-sm font-medium text-neutral-900" onClick={() => setOpen(false)}>
               Live Feed
-            </Link>
-            <Link href="/" className="block text-sm font-medium text-neutral-600" onClick={() => setOpen(false)}>
-              Daily Pulse
-            </Link>
-            <Link href="/x-top-stories" className="block text-sm font-medium text-neutral-600" onClick={() => setOpen(false)}>
-              X Top Stories
             </Link>
             <Link href="/topics" className="block text-sm font-medium text-neutral-600" onClick={() => setOpen(false)}>
               Topics
