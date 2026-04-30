@@ -2,7 +2,7 @@ import { xTopStories as mockStories, XTopStory } from '@/lib/data'
 import { XTopStoryCard } from '@/components/XTopStoryCard'
 import { Clock, RefreshCw, TrendingUp, Zap } from 'lucide-react'
 
-export const revalidate = 14400
+export const dynamic = 'force-dynamic'
 
 export const metadata = {
   title: 'X Top Stories — What\'s Breaking on X Right Now | News Comparator',

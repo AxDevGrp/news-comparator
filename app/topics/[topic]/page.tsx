@@ -6,7 +6,7 @@ import { NarrativeCard } from '@/components/NarrativeCard'
 import { AlertTriangle, TrendingUp, ArrowLeft, Clock } from 'lucide-react'
 import Link from 'next/link'
 
-export const revalidate = 21600
+export const dynamic = 'force-dynamic'
 
 async function fetchTopicBySlug(slug: string): Promise<WarRoomTopic | null> {
   try {

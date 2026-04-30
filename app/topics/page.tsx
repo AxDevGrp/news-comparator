@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { iranWarTopic, WarRoomTopic } from '@/lib/data'
 import { TrendingUp, ArrowRight, BarChart3 } from 'lucide-react'
 
-export const revalidate = 21600
+export const dynamic = 'force-dynamic'
 
 async function fetchLiveTopics(): Promise<WarRoomTopic[]> {
   try {

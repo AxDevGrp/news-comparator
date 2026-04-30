@@ -4,7 +4,7 @@ import { XTopStoryCard } from '@/components/XTopStoryCard'
 import { Clock, Newspaper, Zap, Radio, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 
-export const revalidate = 14400
+export const dynamic = 'force-dynamic'
 
 export const metadata = {
   title: 'Live Feed — Daily Pulse + X Top Stories | News Comparator',
