@@ -1,8 +1,52 @@
-import { dailyPulse } from '@/lib/data'
+import { dailyPulse, DailyPulseItem, WarRoomTopic } from '@/lib/data'
 import { TopicCard } from '@/components/TopicCard'
 import { Clock, RefreshCw } from 'lucide-react'
 
-export default function DailyPulsePage() {
+export const dynamic = 'force-dynamic'
+
+type TopicsLiveResponse = {
+  topics?: WarRoomTopic[]
+}
+
+function mapTopicsToDailyPulse(topics: WarRoomTopic[]): DailyPulseItem[] {
+  return topics.map((t, i): DailyPulseItem => ({
+    id: `live-dp-${i + 1}`,
+    rank: i + 1,
+    topic: t.title,
+    slug: t.slug,
+    convergence: t.convergence[0]?.text ?? '',
+    leftTake: t.narratives.find(n => n.bias === 'left' || n.bias === 'centre-left')?.summary ?? '',
+    rightTake: t.narratives.find(n => n.bias === 'right' || n.bias === 'centre-right')?.summary ?? '',
+    internationalTake: t.narratives.find(n => n.bias === 'international' || n.bias === 'centre')?.summary ?? '',
+    blindspot: t.blindspots[0]?.text ?? '',
+    isNew: true,
+  }))
+}
+
+async function getDailyPulse(): Promise<{ items: DailyPulseItem[]; topics: WarRoomTopic[] }> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
+    const res = await fetch(`${baseUrl}/api/topics-live`, { cache: 'no-store' })
+
+    if (!res.ok) throw new Error(`topics-live HTTP ${res.status}`)
+
+    const data = (await res.json()) as TopicsLiveResponse
+    const topics = data.topics ?? []
+
+    if (!topics.length) {
+      return { items: dailyPulse, topics: [] }
+    }
+
+    return { items: mapTopicsToDailyPulse(topics), topics }
+  } catch (err) {
+    console.error('[DailyPulsePage] falling back to mock data:', err)
+    return { items: dailyPulse, topics: [] }
+  }
+}
+
+export default async function DailyPulsePage() {
+  const { items, topics } = await getDailyPulse()
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
@@ -20,8 +64,8 @@ export default function DailyPulsePage() {
       </div>
 
       <div className="space-y-6">
-        {dailyPulse.map((item) => (
-          <TopicCard key={item.id} item={item} />
+        {items.map((item, i) => (
+          <TopicCard key={item.id} item={item} topic={topics[i]} />
         ))}
       </div>
 
