@@ -2,22 +2,29 @@ import { NextResponse } from 'next/server'
 import { fetchGoogleNewsSearch } from '@/lib/rss'
 import { generateXTopStory } from '@/lib/ai'
 
-export const revalidate = 14400 // refresh every 4 hours
+export const dynamic = 'force-dynamic'
 
-async function fetchGoogleTrends(): Promise<string[]> {
+async function fetchTopTrendingTopics(): Promise<string[]> {
   try {
-    const res = await fetch('https://trends.google.com/trends/trendingsearches/daily/rss?geo=US', {
-      next: { revalidate: 3600 },
+    // Use Google News Top Stories RSS (Google Trends RSS is deprecated/404)
+    const res = await fetch('https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en', {
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; NewsComparatorBot/1.0)' },
     })
+    if (!res.ok) return []
     const xml = await res.text()
     const items = xml.match(/<item>([\s\S]*?)<\/item>/g) ?? []
-    return items
-      .slice(0, 5)
+    // Extract titles and dedupe into topic-like labels
+    const titles = items
+      .slice(0, 15)
       .map((item) => {
         const m = item.match(/<title>([\s\S]*?)<\/title>/)
-        return m?.[1]?.replace(/<!\[CDATA\[(.*?)\]\]>/, '$1').trim() ?? ''
+        const raw = m?.[1]?.trim() ?? ''
+        // Strip outlet suffix e.g. "Title - AP News" → "Title"
+        return raw.replace(/\s[-–]\s[^-–]+$/, '').trim()
       })
-      .filter(Boolean)
+      .filter((t) => t.length > 10)
+      .slice(0, 5)
+    return titles
   } catch {
     return []
   }
@@ -25,7 +32,7 @@ async function fetchGoogleTrends(): Promise<string[]> {
 
 export async function GET() {
   try {
-    const trends = await fetchGoogleTrends()
+    const trends = await fetchTopTrendingTopics()
     if (!trends.length) {
       return NextResponse.json({ stories: [], error: 'No trends available' }, { status: 503 })
     }
