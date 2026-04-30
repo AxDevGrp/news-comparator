@@ -1,10 +1,26 @@
 import Link from 'next/link'
-import { iranWarTopic } from '@/lib/data'
+import { iranWarTopic, WarRoomTopic } from '@/lib/data'
 import { TrendingUp, ArrowRight, BarChart3 } from 'lucide-react'
 
-const allTopics = [iranWarTopic]
+export const revalidate = 21600
 
-export default function TopicsPage() {
+async function fetchLiveTopics(): Promise<WarRoomTopic[]> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
+    const res = await fetch(`${baseUrl}/api/topics-live`, {
+      next: { revalidate: 21600 },
+    })
+    if (!res.ok) return [iranWarTopic]
+    const data = await res.json()
+    return data.topics?.length ? data.topics : [iranWarTopic]
+  } catch {
+    return [iranWarTopic]
+  }
+}
+
+export default async function TopicsPage() {
+  const allTopics = await fetchLiveTopics()
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">

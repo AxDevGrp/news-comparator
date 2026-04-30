@@ -1,18 +1,65 @@
-import { dailyPulse, xTopStories } from '@/lib/data'
+import { dailyPulse as mockPulse, xTopStories as mockStories, DailyPulseItem, XTopStory, WarRoomTopic } from '@/lib/data'
 import { TopicCard } from '@/components/TopicCard'
 import { XTopStoryCard } from '@/components/XTopStoryCard'
 import { Clock, Newspaper, Zap, Radio, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
+
+export const revalidate = 14400
 
 export const metadata = {
   title: 'Live Feed — Daily Pulse + X Top Stories | News Comparator',
   description: 'All the news, decomposed. Daily Pulse briefing plus real-time X Top Stories in one view.',
 }
 
-export default function LiveFeedPage() {
-  const pulseUpdated = dailyPulse[0]?.isNew ? 'Just now' : '28 Apr 2026, 06:00'
-  const xUpdated = xTopStories[0]?.lastUpdated
-    ? new Date(xTopStories[0].lastUpdated).toLocaleDateString('en-GB', {
+async function fetchLiveXStories(): Promise<XTopStory[]> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
+    const res = await fetch(`${baseUrl}/api/x-stories-live`, { next: { revalidate: 14400 } })
+    if (!res.ok) return mockStories
+    const data = await res.json()
+    return data.stories?.length ? data.stories : mockStories
+  } catch {
+    return mockStories
+  }
+}
+
+async function fetchLivePulse(): Promise<DailyPulseItem[]> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
+    const res = await fetch(`${baseUrl}/api/topics-live`, { next: { revalidate: 21600 } })
+    if (!res.ok) return mockPulse
+    const data = await res.json()
+    const topics: WarRoomTopic[] = data.topics ?? []
+    if (!topics.length) return mockPulse
+    // Map WarRoomTopic → DailyPulseItem
+    return topics.map((t, i): DailyPulseItem => {
+      const leftNarrative = t.narratives.find((n) => n.bias === 'left' || n.bias === 'centre-left')
+      const rightNarrative = t.narratives.find((n) => n.bias === 'right' || n.bias === 'centre-right')
+      const intlNarrative = t.narratives.find((n) => n.bias === 'international' || n.bias === 'centre')
+      return {
+        id: `live-dp-${i + 1}`,
+        rank: i + 1,
+        topic: t.title,
+        slug: t.slug,
+        convergence: t.convergence[0]?.text ?? '',
+        leftTake: leftNarrative?.summary ?? '',
+        rightTake: rightNarrative?.summary ?? '',
+        internationalTake: intlNarrative?.summary ?? '',
+        blindspot: t.blindspots[0]?.text ?? '',
+        isNew: true,
+      }
+    })
+  } catch {
+    return mockPulse
+  }
+}
+
+export default async function LiveFeedPage() {
+  const [xStories, pulse] = await Promise.all([fetchLiveXStories(), fetchLivePulse()])
+
+  const pulseUpdated = 'Just now'
+  const xUpdated = xStories[0]?.lastUpdated
+    ? new Date(xStories[0].lastUpdated).toLocaleDateString('en-GB', {
         day: 'numeric',
         month: 'short',
         hour: '2-digit',
@@ -20,7 +67,7 @@ export default function LiveFeedPage() {
       })
     : 'Just now'
 
-  const breakingCount = xTopStories.filter((s) => s.isBreaking).length
+  const breakingCount = xStories.filter((s) => s.isBreaking).length
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -48,7 +95,7 @@ export default function LiveFeedPage() {
           </div>
 
           <div className="space-y-6">
-            {dailyPulse.map((item) => (
+            {pulse.map((item) => (
               <TopicCard key={item.id} item={item} />
             ))}
           </div>
@@ -84,7 +131,7 @@ export default function LiveFeedPage() {
             </div>
 
             <div className="space-y-4">
-              {xTopStories.map((story) => (
+              {xStories.map((story) => (
                 <CompactXStory key={story.id} story={story} />
               ))}
             </div>
@@ -113,7 +160,7 @@ export default function LiveFeedPage() {
   )
 }
 
-function CompactXStory({ story }: { story: (typeof xTopStories)[0] }) {
+function CompactXStory({ story }: { story: XTopStory }) {
   return (
     <div className="bg-white rounded-xl border border-neutral-200 p-4 transition hover:shadow-sm">
       <div className="flex items-start justify-between gap-2 mb-2">

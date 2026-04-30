@@ -1,13 +1,33 @@
 import { notFound } from 'next/navigation'
-import { getTopicBySlug } from '@/lib/data'
+import { getTopicBySlug, iranWarTopic, WarRoomTopic } from '@/lib/data'
 import { ConvergenceBar } from '@/components/ConvergenceBar'
 import { SpectrumGrid } from '@/components/SpectrumGrid'
 import { NarrativeCard } from '@/components/NarrativeCard'
 import { AlertTriangle, TrendingUp, ArrowLeft, Clock } from 'lucide-react'
 import Link from 'next/link'
 
-export default function WarRoomPage({ params }: { params: { topic: string } }) {
-  const topic = getTopicBySlug(params.topic)
+export const revalidate = 21600
+
+async function fetchTopicBySlug(slug: string): Promise<WarRoomTopic | null> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
+    const res = await fetch(`${baseUrl}/api/topics-live`, {
+      next: { revalidate: 21600 },
+    })
+    if (!res.ok) return getTopicBySlug(slug) ?? null
+    const data = await res.json()
+    const topics: WarRoomTopic[] = data.topics ?? []
+    const found = topics.find((t) => t.slug === slug)
+    if (found) return found
+    // Fallback to mock data
+    return getTopicBySlug(slug) ?? null
+  } catch {
+    return getTopicBySlug(slug) ?? null
+  }
+}
+
+export default async function WarRoomPage({ params }: { params: { topic: string } }) {
+  const topic = await fetchTopicBySlug(params.topic)
   if (!topic) return notFound()
 
   return (
@@ -77,7 +97,6 @@ export default function WarRoomPage({ params }: { params: { topic: string } }) {
       {/* Main content grid */}
       <div className="space-y-8">
         <ConvergenceBar points={topic.convergence} />
-
         <SpectrumGrid headlines={topic.headlines} />
 
         <div>

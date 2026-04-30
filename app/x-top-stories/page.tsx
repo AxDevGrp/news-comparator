@@ -1,14 +1,31 @@
-import { xTopStories } from '@/lib/data'
+import { xTopStories as mockStories, XTopStory } from '@/lib/data'
 import { XTopStoryCard } from '@/components/XTopStoryCard'
 import { Clock, RefreshCw, TrendingUp, Zap } from 'lucide-react'
+
+export const revalidate = 14400
 
 export const metadata = {
   title: 'X Top Stories — What\'s Breaking on X Right Now | News Comparator',
   description: 'Trending discourse decomposed. What\'s blowing up on X, how Left/Right are framing it, and what the viral claims are missing. Updated 3x daily.',
 }
 
-export default function XTopStoriesPage() {
-  const lastUpdated = xTopStories[0]?.lastUpdated
+async function fetchLiveStories(): Promise<XTopStory[]> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
+    const res = await fetch(`${baseUrl}/api/x-stories-live`, {
+      next: { revalidate: 14400 },
+    })
+    if (!res.ok) return mockStories
+    const data = await res.json()
+    return data.stories?.length ? data.stories : mockStories
+  } catch {
+    return mockStories
+  }
+}
+
+export default async function XTopStoriesPage() {
+  const stories = await fetchLiveStories()
+  const lastUpdated = stories[0]?.lastUpdated
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -44,7 +61,7 @@ export default function XTopStoriesPage() {
       </div>
 
       <div className="space-y-6">
-        {xTopStories.map((story) => (
+        {stories.map((story) => (
           <XTopStoryCard key={story.id} story={story} />
         ))}
       </div>
