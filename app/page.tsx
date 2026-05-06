@@ -1,11 +1,19 @@
 import { dailyPulse, DailyPulseItem, WarRoomTopic } from '@/lib/data'
+import { getBaseUrl } from '@/lib/base-url'
 import { TopicCard } from '@/components/TopicCard'
-import { Clock, RefreshCw } from 'lucide-react'
+import { DailyIntelReport } from '@/components/DailyIntelReport'
+import { Clock, RefreshCw, Zap } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
 type TopicsLiveResponse = {
   topics?: WarRoomTopic[]
+}
+
+type DailyIntelResponse = {
+  report?: string | null
+  generatedAt?: string
+  error?: string
 }
 
 function mapTopicsToDailyPulse(topics: WarRoomTopic[]): DailyPulseItem[] {
@@ -25,7 +33,7 @@ function mapTopicsToDailyPulse(topics: WarRoomTopic[]): DailyPulseItem[] {
 
 async function getDailyPulse(): Promise<{ items: DailyPulseItem[]; topics: WarRoomTopic[] }> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
+    const baseUrl = getBaseUrl()
     const res = await fetch(`${baseUrl}/api/topics-live`, { cache: 'no-store' })
 
     if (!res.ok) throw new Error(`topics-live HTTP ${res.status}`)
@@ -44,11 +52,54 @@ async function getDailyPulse(): Promise<{ items: DailyPulseItem[]; topics: WarRo
   }
 }
 
+async function getDailyIntel(): Promise<{ report: string | null; generatedAt: string }> {
+  try {
+    const baseUrl = getBaseUrl()
+    const res = await fetch(`${baseUrl}/api/daily-intel`, { cache: 'no-store' })
+
+    if (!res.ok) throw new Error(`daily-intel HTTP ${res.status}`)
+
+    const data = (await res.json()) as DailyIntelResponse
+    return {
+      report: data.report ?? null,
+      generatedAt: data.generatedAt ?? new Date().toISOString(),
+    }
+  } catch (err) {
+    console.error('[DailyIntelSection] failed to load daily intel:', err)
+    return { report: null, generatedAt: new Date().toISOString() }
+  }
+}
+
 export default async function DailyPulsePage() {
-  const { items, topics } = await getDailyPulse()
+  // Fetch both pipelines in parallel
+  const [{ items, topics }, { report, generatedAt }] = await Promise.all([
+    getDailyPulse(),
+    getDailyIntel(),
+  ])
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+      {/* ── Daily Intel Report (Pipeline 3) ── */}
+      <div className="mb-12">
+        <div className="flex items-center gap-2 text-sm text-neutral-500 mb-3">
+          <Zap className="w-4 h-4 text-red-500" />
+          <span className="font-medium text-neutral-700">Miss Penny Daily Intel</span>
+          <span className="text-neutral-400">· AI-synthesised from 30+ live sources · Refreshes daily at 6 AM ET</span>
+        </div>
+
+        {report ? (
+          <DailyIntelReport markdown={report} generatedAt={generatedAt} />
+        ) : (
+          <div className="bg-neutral-950 rounded-2xl p-8 text-center text-neutral-500 border border-neutral-800">
+            <span className="text-2xl mb-3 block">🌍</span>
+            <p className="font-medium text-neutral-400">Daily Intel generating...</p>
+            <p className="text-sm mt-1">Check back shortly — the report runs each morning at 6 AM ET.</p>
+          </div>
+        )}
+      </div>
+
+      {/* ── Daily Pulse (Pipeline 1) ── */}
       <div className="mb-8">
         <div className="flex items-center gap-2 text-sm text-neutral-500 mb-2">
           <Clock className="w-4 h-4" />
