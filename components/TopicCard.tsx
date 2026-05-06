@@ -1,17 +1,22 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DailyPulseItem, WarRoomTopic } from '@/lib/data'
 import { ChevronDown, ChevronUp, Sparkles } from 'lucide-react'
 
 type TopicCardProps = {
   item: DailyPulseItem
   topic?: WarRoomTopic
+  defaultExpanded?: boolean
 }
 
-export function TopicCard({ item, topic }: TopicCardProps) {
-  const [isExpanded, setIsExpanded] = useState(false)
+export function TopicCard({ item, topic, defaultExpanded = false }: TopicCardProps) {
+  const [isExpanded, setIsExpanded] = useState(defaultExpanded)
   const headlines = topic?.headlines ?? []
+
+  useEffect(() => {
+    setIsExpanded(defaultExpanded)
+  }, [defaultExpanded])
 
   return (
     <div className="bg-white rounded-xl border border-neutral-200 p-6 transition hover:shadow-sm">

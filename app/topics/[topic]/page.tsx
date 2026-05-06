@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
-import { getTopicBySlug, iranWarTopic, WarRoomTopic } from '@/lib/data'
+import { getTopicBySlug, WarRoomTopic } from '@/lib/data'
+import { getBaseUrl } from '@/lib/base-url'
 import { ConvergenceBar } from '@/components/ConvergenceBar'
 import { SpectrumGrid } from '@/components/SpectrumGrid'
 import { NarrativeCard } from '@/components/NarrativeCard'
@@ -10,7 +11,7 @@ export const dynamic = 'force-dynamic'
 
 async function fetchTopicBySlug(slug: string): Promise<WarRoomTopic | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
+    const baseUrl = getBaseUrl()
     const res = await fetch(`${baseUrl}/api/topics-live`, {
       next: { revalidate: 21600 },
     })

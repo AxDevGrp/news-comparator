@@ -1,4 +1,5 @@
 import { TrendingUp, RefreshCw, ExternalLink } from 'lucide-react'
+import { getBaseUrl } from '@/lib/base-url'
 
 export const metadata = {
   title: 'Google Trends — What America Is Searching Right Now | News Comparator',
@@ -14,9 +15,7 @@ interface Trend {
 
 async function fetchTrends(): Promise<Trend[]> {
   try {
-    const baseUrl =
-      process.env.NEXT_PUBLIC_BASE_URL ||
-      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
+    const baseUrl = getBaseUrl()
     const res = await fetch(`${baseUrl}/api/trends`, { next: { revalidate: 3600 } })
     if (!res.ok) return []
     const data = await res.json()

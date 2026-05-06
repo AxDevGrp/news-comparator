@@ -26,7 +26,7 @@ export function Header() {
               Topics
             </Link>
             <Link href="/x-top-stories" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition">
-              X Top Stories
+              Trending Stories
             </Link>
             <Link href="/trends" className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition">
               Trends
@@ -53,7 +53,7 @@ export function Header() {
               Topics
             </Link>
             <Link href="/x-top-stories" className="block text-sm font-medium text-neutral-600" onClick={() => setOpen(false)}>
-              X Top Stories
+              Trending Stories
             </Link>
             <Link href="/trends" className="block text-sm font-medium text-neutral-600" onClick={() => setOpen(false)}>
               Trends

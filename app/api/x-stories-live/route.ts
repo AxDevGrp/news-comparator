@@ -32,6 +32,10 @@ async function fetchTopTrendingTopics(): Promise<string[]> {
 
 export async function GET() {
   try {
+    if (!process.env.GEMINI_API_KEY) {
+      return NextResponse.json({ stories: [], error: 'Missing GEMINI_API_KEY' }, { status: 503 })
+    }
+
     const trends = await fetchTopTrendingTopics()
     if (!trends.length) {
       return NextResponse.json({ stories: [], error: 'No trends available' }, { status: 503 })

@@ -9,6 +9,10 @@ export const revalidate = 21600 // refresh every 6 hours
 
 export async function GET() {
   try {
+    if (!process.env.GEMINI_API_KEY) {
+      return NextResponse.json({ topics: [], error: 'Missing GEMINI_API_KEY' }, { status: 503 })
+    }
+
     // Fetch all outlet RSS feeds in parallel
     const allArticlesNested = await Promise.all(
       ALL_FEEDS.map((feed) => fetchRss(feed.url, feed.name, 8))
@@ -21,6 +25,9 @@ export async function GET() {
 
     // Cluster into topics via AI
     const clusters = await clusterArticlesIntoTopics(allArticles)
+    if (!clusters.length) {
+      return NextResponse.json({ topics: [], error: 'No AI topic clusters generated' }, { status: 503 })
+    }
 
     // Generate full WarRoomTopic for each cluster
     const topics: WarRoomTopic[] = await Promise.all(

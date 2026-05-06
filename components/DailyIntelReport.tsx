@@ -1,18 +1,16 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import ReactMarkdown from 'react-markdown'
+import rehypeSanitize from 'rehype-sanitize'
+import remarkGfm from 'remark-gfm'
 
 interface DailyIntelReportProps {
   markdown: string
   generatedAt: string
 }
 
-/**
- * Renders the Daily Intel markdown report.
- * Converts section headers, bullets, and bold text to styled HTML.
- */
+/** Renders the Daily Intel markdown report with sanitized HTML output. */
 export function DailyIntelReport({ markdown, generatedAt }: DailyIntelReportProps) {
-  const formatted = formatMarkdown(markdown)
   const genDate = new Date(generatedAt).toLocaleString('en-US', {
     weekday: 'short',
     month: 'short',
@@ -48,39 +46,11 @@ export function DailyIntelReport({ markdown, generatedAt }: DailyIntelReportProp
           prose-li:text-neutral-300 prose-li:leading-relaxed
           prose-strong:text-white
           prose-hr:border-neutral-800"
-        dangerouslySetInnerHTML={{ __html: formatted }}
-      />
+      >
+        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeSanitize]}>
+          {markdown}
+        </ReactMarkdown>
+      </div>
     </div>
   )
-}
-
-/** Lightweight markdown → HTML converter for the intel report format */
-function formatMarkdown(md: string): string {
-  return md
-    // Strip leading/trailing dashes used as section dividers (---) → <hr>
-    .replace(/^---$/gm, '<hr />')
-    // h1
-    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-    // h2
-    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-    // h3
-    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-    // Bold **text**
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    // Bullet points starting with - or •
-    .replace(/^[•\-] (.+)$/gm, '<li>$1</li>')
-    // Wrap consecutive <li> in <ul>
-    .replace(/(<li>[\s\S]*?<\/li>\n?)+/g, (match) => `<ul class="list-none pl-0 space-y-1">${match}</ul>`)
-    // Numbered list items (1. 2. etc)
-    .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
-    // Italic *text*
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    // Blank lines → paragraph breaks (only between non-tag lines)
-    .replace(/\n\n(?!<)/g, '</p><p>')
-    // Wrap the whole thing
-    .replace(/^(?!<)(.+)$/gm, (line) => line.trim() ? line : '')
-    // Clean up any double paragraph tags
-    .replace(/<p><\/p>/g, '')
-    // Wrap in a paragraph if content exists
-    .split('\n').join('\n')
 }

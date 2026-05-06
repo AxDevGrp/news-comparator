@@ -247,15 +247,10 @@ RULES: Numbers beat vague language. Executive Summary must work standalone. Key 
 // ── Gemini helper ────────────────────────────────────────────────────────────
 
 async function callGemini(prompt: string): Promise<string> {
-  try {
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY ?? '')
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
-    const result = await model.generateContent(prompt)
-    return result.response.text().trim()
-  } catch (err) {
-    console.error('[intel] Gemini error:', err)
-    return `[Synthesis error: ${String(err)}]`
-  }
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY ?? '')
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+  const result = await model.generateContent(prompt)
+  return result.response.text().trim()
 }
 
 // ── Article collection ────────────────────────────────────────────────────────
@@ -329,7 +324,7 @@ export async function runDailyIntelPipeline(): Promise<string> {
   const compressed = Object.fromEntries(
     await Promise.all(domains.map(async d => {
       const report = domainReports[d] as string
-      if (report.length < 200 || report.startsWith('[Synthesis error')) {
+      if (report.length < 200) {
         return [d, report]
       }
       const prompt = COMPRESS_PROMPT.replace('{report}', report.slice(0, 6000))
@@ -343,8 +338,8 @@ export async function runDailyIntelPipeline(): Promise<string> {
   console.log('[intel] Phase 3: final synthesis...')
   const finalPrompt = SYNTHESIS_PROMPT
     .replace(/{date}/g, dateStr)
-    .replace('{date_short}', dateShort)
-    .replace('{time}', timeStr)
+    .replace(/{date_short}/g, dateShort)
+    .replace(/{time}/g, timeStr)
     .replace('{politics}', (compressed['politics'] as string) ?? '(unavailable)')
     .replace('{tech}', (compressed['tech'] as string) ?? '(unavailable)')
     .replace('{finance}', (compressed['finance'] as string) ?? '(unavailable)')

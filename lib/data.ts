@@ -298,6 +298,7 @@ export interface XTopStory {
   engagementEstimate: string
   lastUpdated: string
   isBreaking?: boolean
+  sourceArticles?: { title: string; url: string; source: string }[]
   /** Optional: a public X/Twitter post URL to embed in the card */
   featuredTweetUrl?: string
   /** Pre-fetched oEmbed HTML (server-side populated, not stored here) */

@@ -1,8 +1,15 @@
 import { NextResponse } from 'next/server'
+import { unstable_cache } from 'next/cache'
 import { runDailyIntelPipeline } from '@/lib/intel'
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 86400 // 24 hours — refreshes once per day
+
+const getCachedDailyIntelReport = unstable_cache(
+  async () => runDailyIntelPipeline(),
+  ['daily-intel-report'],
+  { revalidate: 86400 }
+)
 
 export async function GET() {
   try {
@@ -13,7 +20,7 @@ export async function GET() {
       )
     }
 
-    const report = await runDailyIntelPipeline()
+    const report = await getCachedDailyIntelReport()
 
     if (!report || report.length < 200) {
       return NextResponse.json(

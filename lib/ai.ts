@@ -67,6 +67,11 @@ Be direct. No hedging. Use plain English. Base everything on the articles provid
     blindspot: (data.blindspot as string) ?? '',
     engagementEstimate: (data.engagementEstimate as string) ?? '',
     isBreaking: (data.isBreaking as boolean) ?? false,
+    sourceArticles: articles.slice(0, 5).map((a) => ({
+      title: a.title,
+      url: a.url,
+      source: a.source,
+    })),
   }
 }
 

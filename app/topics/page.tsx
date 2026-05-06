@@ -1,12 +1,13 @@
 import Link from 'next/link'
 import { iranWarTopic, WarRoomTopic } from '@/lib/data'
+import { getBaseUrl } from '@/lib/base-url'
 import { TrendingUp, ArrowRight, BarChart3 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
 async function fetchLiveTopics(): Promise<WarRoomTopic[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
+    const baseUrl = getBaseUrl()
     const res = await fetch(`${baseUrl}/api/topics-live`, {
       next: { revalidate: 21600 },
     })

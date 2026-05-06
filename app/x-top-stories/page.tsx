@@ -1,17 +1,18 @@
 import { xTopStories as mockStories, XTopStory } from '@/lib/data'
+import { getBaseUrl } from '@/lib/base-url'
 import { XTopStoryCard } from '@/components/XTopStoryCard'
 import { Clock, RefreshCw, TrendingUp, Zap } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: 'X Top Stories — What\'s Breaking on X Right Now | News Comparator',
-  description: 'Trending discourse decomposed. What\'s blowing up on X, how Left/Right are framing it, and what the viral claims are missing. Updated 3x daily.',
+  title: 'Trending Stories — What\'s Breaking Right Now | News Comparator',
+  description: 'Trending news decomposed by source articles, media framing, early facts, media lag, and blindspots. Updated 3x daily.',
 }
 
 async function fetchLiveStories(): Promise<XTopStory[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000'
+    const baseUrl = getBaseUrl()
     const res = await fetch(`${baseUrl}/api/x-stories-live`, {
       next: { revalidate: 14400 },
     })
@@ -42,11 +43,11 @@ export default async function XTopStoriesPage() {
         <div className="flex items-center gap-3 mb-2">
           <Zap className="w-7 h-7 text-orange-500" />
           <h1 className="text-3xl font-bold text-neutral-900 tracking-tight">
-            X Top Stories
+            Trending Stories
           </h1>
         </div>
         <p className="text-neutral-500 mt-1 max-w-2xl">
-          What's blowing up on X right now — decomposed into Left framing, Right framing, early facts, media lag, and blindspots. Updated 9am, 1pm, 6pm ET.
+          Fast-moving stories from Google News RSS and related source articles — decomposed into media framing, early facts, media lag, and blindspots. Updated 9am, 1pm, 6pm ET.
         </p>
         <div className="flex items-center gap-4 mt-4 text-sm">
           <span className="inline-flex items-center gap-1.5 text-neutral-600">
@@ -67,15 +68,15 @@ export default async function XTopStoriesPage() {
       </div>
 
       <div className="mt-12 p-6 bg-neutral-100 rounded-xl">
-        <h2 className="text-lg font-semibold text-neutral-800 mb-2">How X Top Stories works</h2>
+        <h2 className="text-lg font-semibold text-neutral-800 mb-2">How Trending Stories works</h2>
         <div className="grid sm:grid-cols-2 gap-4 text-sm text-neutral-600">
           <div>
             <span className="font-semibold text-neutral-800">1. Monitor</span>
-            <p>We track trending topics on X in real time, focusing on political and news discourse.</p>
+            <p>We pull Google News RSS top stories, then collect related source articles for each topic.</p>
           </div>
           <div>
             <span className="font-semibold text-neutral-800">2. Decompose</span>
-            <p>AI extracts Left/Right framing, identifies viral claims, and cross-reaches with mainstream media.</p>
+            <p>AI extracts media framing, identifies contested claims, and links back to the source articles.</p>
           </div>
           <div>
             <span className="font-semibold text-neutral-800">3. Verify</span>
